@@ -1,0 +1,19 @@
+[gd_scene format=2]
+
+[node name="ParamDisplayer" type="HBoxContainer"]
+margin_right = 62.0
+margin_bottom = 24.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="NameLabel" type="Label" parent="."]
+margin_top = 5.0
+margin_bottom = 19.0
+size_flags_horizontal = 3
+
+[node name="ValueEdit" type="LineEdit" parent="."]
+margin_left = 4.0
+margin_right = 62.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
