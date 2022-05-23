@@ -25,21 +25,39 @@ _global_script_classes=[ {
 "path": "res://src/BetterDatabase/BetterDatabaseSaver/BetterDatabaseSaver.gd"
 }, {
 "base": "Resource",
+"class": "BetterDocument",
+"language": "GDScript",
+"path": "res://src/BetterDatabase/BetterDocument.gd"
+}, {
+"base": "BetterDocument",
 "class": "DbGuiSettingsDoc",
 "language": "GDScript",
 "path": "res://src/DBGUI/DbGuiSettingsDoc.gd"
 }, {
+"base": "Reference",
+"class": "GutHookScript",
+"language": "GDScript",
+"path": "res://addons/gut/hook_script.gd"
+}, {
 "base": "Node",
-"class": "gut_test",
+"class": "GutTest",
 "language": "GDScript",
 "path": "res://addons/gut/test.gd"
+}, {
+"base": "ImageTexture",
+"class": "SaveableTexture",
+"language": "GDScript",
+"path": "res://src/BetterDatabase/SaveableTexture/SaveableTexture.gd"
 } ]
 _global_script_class_icons={
 "BetterDatabase": "",
 "BetterDatabaseLoader": "",
 "BetterDatabaseSaver": "",
+"BetterDocument": "",
 "DbGuiSettingsDoc": "",
-"gut_test": ""
+"GutHookScript": "",
+"GutTest": "",
+"SaveableTexture": ""
 }
 
 [application]

@@ -50,6 +50,8 @@ func _parse_dict(dict:Dictionary):
 		return _parse_dict_to_vec3(dict)
 	if _is_dict_vec2(dict):
 		return _parse_dict_to_vec2(dict)
+	if _is_dict_saveable_texture(dict):
+		return _parse_dict_to_saveable_texture(dict)
 	
 	var parsed = {}
 	
@@ -89,6 +91,16 @@ func _is_dict_vec2(dict:Dictionary) -> bool:
 	return is_vec2
 
 
+func _is_dict_saveable_texture(dict:Dictionary) -> bool:
+	var is_sv_texture = (
+		dict.size() == 2
+		and dict.has("type")
+		and dict.has("texture_path")
+		and dict.type == "SaveableTexture"
+	)
+	return is_sv_texture
+
+
 func _parse_dict_to_color(col_dict:Dictionary) -> Color:
 	var col = Color(
 		col_dict.r,
@@ -114,3 +126,10 @@ func _parse_dict_to_vec2(vec_dict:Dictionary) -> Vector2:
 		vec_dict.y
 	)
 	return vec
+
+
+func _parse_dict_to_saveable_texture(svt_dict:Dictionary) -> SaveableTexture:
+	var path = svt_dict.texture_path
+	var texture = SaveableTexture.new()
+	texture.load_png_from_path(path)
+	return texture

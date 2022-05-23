@@ -1,14 +1,16 @@
-extends gut_test
+extends GutTest
 
 class TestDocType:
-	extends Reference
+	extends BetterDocument
 	
 	var test_a : String
 	var test_b : int = 7
+	var test_c : int = 8
+	var test_d : int = 9
 
 
 class AnotherDocType:
-	extends Reference
+	extends BetterDocument
 	
 	var vec3D : Vector3
 	var vec2D : Vector2
@@ -302,6 +304,86 @@ func test_loads_from_save_dict() -> void:
 	assert_eq(loaded_doc.nested_arr[2].col, doc.nested_arr[2].col)
 	assert_eq(loaded_doc.nested_arr[2].vec2, doc.nested_arr[2].vec2)
 	assert_eq(loaded_doc.nested_arr[2].arr[0], doc.nested_arr[2].arr[0])
+
+
+func test_delete_all_deletes_all() -> void:
+	db.append_doc(TestDocType.new())
+	db.append_doc(TestDocType.new())
+	db.append_doc(TestDocType.new())
+	
+	assert_eq(db.get_all_docs().size(), 3, "Should have 3 docs")
+	
+	db.delete_all_docs()
+	assert_eq(db.get_all_docs().size(), 0, "Should have no docs")
+
+
+func test_delete_all_emits_something_changed_signal_once() -> void:
+	db.append_doc(TestDocType.new())
+	db.append_doc(TestDocType.new())
+	db.append_doc(TestDocType.new())
+	
+	watch_signals(db)
+	
+	db.delete_all_docs()
+	assert_signal_emit_count(db, "something_changed", 1, "Should emit something_changed signal once")
+
+
+func test_get_docs_sorted_by_ascending_descending() -> void:
+	var doc1 = TestDocType.new()
+	doc1.test_b = 1
+	db.append_doc(doc1)
+	
+	var doc2 = TestDocType.new()
+	doc2.test_b = 4
+	db.append_doc(doc2)
+	
+	var doc3 = TestDocType.new()
+	doc3.test_b = 3
+	db.append_doc(doc3)
+	
+	var sorted_ascending = db.get_docs_sorted_by("test_b", db.ASCENDING)
+	assert_eq(sorted_ascending, [doc1, doc3, doc2])
+	
+	var sorted_descending = db.get_docs_sorted_by("test_b", db.DESCENDING)
+	assert_eq(sorted_descending, [doc2, doc3, doc1])
+
+
+func test_get_docs_sorted_by_multiple_fields() -> void:
+	var doc1 = TestDocType.new()
+	doc1.test_b = 1
+	doc1.test_c = 2
+	doc1.test_d = 3
+	db.append_doc(doc1)
+	
+	var doc2 = TestDocType.new()
+	doc2.test_b = 3
+	doc2.test_c = 2
+	doc2.test_d = 3
+	db.append_doc(doc2)
+	
+	var doc3 = TestDocType.new()
+	doc3.test_b = 3
+	doc3.test_c = 6
+	doc3.test_d = 3
+	db.append_doc(doc3)
+	
+	var doc4 = TestDocType.new()
+	doc4.test_b = 3
+	doc4.test_c = 6
+	doc4.test_d = -5
+	db.append_doc(doc4)
+	
+	var sort_keys = [
+		"test_b",
+		"test_c",
+		"test_d",
+	]
+	
+	var sorted_ascending = db.get_docs_sorted_by(sort_keys, db.ASCENDING)
+	assert_eq(sorted_ascending, [doc1, doc2, doc4, doc3])
+	
+	var sorted_descending = db.get_docs_sorted_by(sort_keys, db.DESCENDING)
+	assert_eq(sorted_descending, [doc3, doc4, doc2, doc1])
 
 
 func _create_doc_with_nested_vec_and_colors() -> AnotherDocType:

@@ -1,4 +1,4 @@
-extends Resource
+extends BetterDocument
 class_name DbGuiSettingsDoc
 
 
